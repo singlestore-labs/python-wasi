@@ -100,6 +100,19 @@ in either the build or test process. The `reset-python-repo.sh` script
 can be used to undo the changes made. This allows you to easily change
 to another branch to build alternate versions of Python.
 
+# ToDo
+
+This project is in early development as well as WASM and the WASI SDK.
+Many features expected in a POSIX-like environment are still not available.
+This includes threads, sockets, subprocesses, dynamically linked libraries,
+and file operations pertaining to file ownership and permissions. As 
+more support is added in each of these areas, more capabalities will be
+unlocked in the WASI build of CPython as well.
+
+The highest priority features for this project are 1) threads and 2) dynamically
+linked libraries since these are required for using many Python extension
+modules.
+
 # Resources
 
 [Python](https://python.org) The Python programming language
