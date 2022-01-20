@@ -90,10 +90,10 @@ to another branch to build alternate versions of Python.
 
 # Resources
 
-[Python](https://python.org)
+[Python](https://python.org) The Python programming language
 
-[CPython](https://github.com/python/cpython)
+[CPython](https://github.com/python/cpython) The CPython source repository
 
-[WASI SDK](https://github.com/WebAssembly/wasi-sdk)
+[WASI SDK](https://github.com/WebAssembly/wasi-sdk) The WASI SDK source repository
 
-[wasix](https://github.com/singlestore-labs/wasix)
+[wasix](https://github.com/singlestore-labs/wasix) The wasix library source repository
