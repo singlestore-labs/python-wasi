@@ -68,6 +68,26 @@ wasmtime run --env PYTHONHOME=/ --env PYTHONPATH=/Lib --env PATH=/ \
 If your CPython source is not located in the `cpython` directory, the above
 `--mapdir=` option should reflect the appropriate location.
 
+## Running Python Unit Tests
+
+You can run the Python test suite with the following command. Many tests
+are currently failing due to the fact that WASI does not have support
+for threads, subprocesses, or sockets. As support is added for these features
+in the future, more tests will pass.
+
+```
+wasmtime run --env PYTHONHOME=/ --env PYTHONPATH=/Lib --env PATH=/ \
+             --mapdir=/::cpython -- cpython/python.wasm \
+             cpython/Lib/test/test_runpy.py
+```
+
+## Resetting Files in the CPython Repository
+
+Several CPython files get patched by the `run.sh` script to fix problems
+in either the build or test process. The `reset-python-repo.sh` script
+can be used to undo the changes made. This allows you to easily change
+to another branch to build alternate versions of Python.
+
 # Resources
 
 [Python](https://python.org)
