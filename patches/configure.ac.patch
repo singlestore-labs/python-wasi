@@ -1,0 +1,24 @@
+diff --git a/configure.ac b/configure.ac
+index 431d66197b..7bc7e9455a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -403,6 +403,9 @@ then
+ 	*-*-vxworks*)
+ 	    ac_sys_system=VxWorks
+ 	    ;;
++	*-*-wasi*)
++	    ac_sys_system=Wasi
++	    ;;
+ 	*)
+ 		# for now, limit cross builds to known configurations
+ 		MACHDEP="unknown"
+@@ -452,6 +455,9 @@ if test "$cross_compiling" = yes; then
+ 	*-*-vxworks*)
+ 		_host_cpu=$host_cpu
+ 		;;
++        *-*-wasi*)
++                _host_cpu=$host_cpu
++		;;
+ 	*)
+ 		# for now, limit cross builds to known configurations
+ 		MACHDEP="unknown"

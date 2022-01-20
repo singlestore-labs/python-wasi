@@ -1,0 +1,43 @@
+diff --git a/Lib/subprocess.py b/Lib/subprocess.py
+index 4effc1d8b3..4ccfeda51f 100644
+--- a/Lib/subprocess.py
++++ b/Lib/subprocess.py
+@@ -1823,19 +1823,21 @@ class Popen(object):
+ 
+ 
+         def _handle_exitstatus(self, sts,
+-                               waitstatus_to_exitcode=os.waitstatus_to_exitcode,
+-                               _WIFSTOPPED=os.WIFSTOPPED,
+-                               _WSTOPSIG=os.WSTOPSIG):
++                               waitstatus_to_exitcode=getattr(os, 'waitstatus_to_exitcode', None),
++                               _WIFSTOPPED=getattr(os, 'WIFSTOPPED', None),
++                               _WSTOPSIG=getattr(os, 'WSTOPSIG', None)):
+             """All callers to this function MUST hold self._waitpid_lock."""
+             # This method is called (indirectly) by __del__, so it cannot
+             # refer to anything outside of its local scope.
+-            if _WIFSTOPPED(sts):
++            if _WIFSTOPPED is not None and _WIFSTOPPED(sts):
+                 self.returncode = -_WSTOPSIG(sts)
+-            else:
++            elif waitstatus_to_exitcode is not None:
+                 self.returncode = waitstatus_to_exitcode(sts)
++            else:
++                self.returncode = 0
+ 
+-        def _internal_poll(self, _deadstate=None, _waitpid=os.waitpid,
+-                _WNOHANG=os.WNOHANG, _ECHILD=errno.ECHILD):
++        def _internal_poll(self, _deadstate=None, _waitpid=getattr(os, 'waitpid', None),
++                _WNOHANG=getattr(os, 'WNOHANG', None), _ECHILD=errno.ECHILD):
+             """Check if child process has terminated.  Returns returncode
+             attribute.
+ 
+@@ -1844,6 +1846,9 @@ class Popen(object):
+ 
+             """
+             if self.returncode is None:
++                if _waitpid is None:
++                    self.returncode = 0
++                    return self.returncode
+                 if not self._waitpid_lock.acquire(False):
+                     # Something else is busy calling waitpid.  Don't allow two
+                     # at once.  We know nothing yet.

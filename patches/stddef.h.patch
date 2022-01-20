@@ -1,0 +1,11 @@
+--- a/stddef.h
++++ b/stddef.h
+@@ -7,6 +7,8 @@
+  *===-----------------------------------------------------------------------===
+  */
+
++#include "__stddef_max_align_t.h"
++
+ #if !defined(__STDDEF_H) || defined(__need_ptrdiff_t) ||                       \
+     defined(__need_size_t) || defined(__need_wchar_t) ||                       \
+     defined(__need_NULL) || defined(__need_wint_t)

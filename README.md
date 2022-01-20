@@ -1,19 +1,79 @@
-# open-source-template
-Template project for open source projects from SingleStore
+# CPython on wasm32-wasi
 
-## Usage
+This project consists of utilities and libraries for building 
+CPython sources for the [WebAssembly](https://webassembly.org)
+platform using the [WASI SDK](https://github.com/WebAssembly/wasi-sdk).
+The scripts here will configure and build various versions of CPython
+(3.9, 3.10, 3.11). A Dockerfile is supplied to simplify the setup
+of a build environment.
 
-1. [Sign up](https://www.singlestore.com/try-free/) for a free SingleStore license. This allows you
-   to run up to 4 nodes up to 32 gigs each for free. Grab your license key from
-   [SingleStore portal](https://portal.singlestore.com/?utm_medium=osm&utm_source=github) and set it as an environment
-   variable.
+## Building the Docker Image
 
-   ```bash
-   export SINGLESTORE_LICENSE="singlestore license"
-   ```
+To build the Docker image, use the following command:
 
-## Resources
+```
+docker build -f docker/Dockerfile -t wasi-build:latest docker
+```
 
-* [Documentation](https://docs.singlestore.com)
-* [Twitter](https://twitter.com/SingleStoreDevs)
-* [SingleStore forums](https://www.singlestore.com/forum)
+Note that the `run.sh` script used below does patch a number of files
+in the WASI SDK to alleviate problems in the Python build process.
+If you are not using Docker, you may wish to make a note of the files
+that get changed.
+
+## Starting a Docker Container
+
+To run the Docker image created above, use the following command:
+
+```
+docker run -it --rm -v /home/me:/home/me wasi-build:latest bash
+```
+
+The mount for your user directory should be changed accordingly.
+You do not necessarily need to mount your user directory, just a
+writable directory that has access to the files from this project.
+
+## Build CPython
+
+In the Docker container created in the previous step, run the
+following command from this project directory. It will download the
+CPython repository as well as the source for the
+[wasix](https://github.com/singlestore-labs/wasix) project, patch
+files in the WASI SDK and CPython source, then build CPython
+for the WASI platform.
+
+```
+cd /path/to/python-wasi
+./run.sh
+```
+
+### Cloning CPython and/or wasix Manually
+
+The paths to the CPython source and wasix source are configurable in the
+`run.sh` script. You can clone them manually before running `run.sh`.
+This method can be used to change the source branch used prior to running
+the build.
+
+## Running WASI CPython
+
+The `run.sh` script will execute a smoke test of the resulting CPython
+build using `wasmtime` which prints the version number of the CPython
+interpreter that was just built. To run an interactive session of the
+newly built CPython interpreter, use the following command:
+
+```
+wasmtime run --env PYTHONHOME=/ --env PYTHONPATH=/Lib --env PATH=/ \
+             --mapdir=/::cpython -- cpython/python.wasm -i
+```
+
+If your CPython source is not located in the `cpython` directory, the above
+`--mapdir=` option should reflect the appropriate location.
+
+# Resources
+
+[Python](https://python.org)
+
+[CPython](https://github.com/python/cpython)
+
+[WASI SDK](https://github.com/WebAssembly/wasi-sdk)
+
+[wasix](https://github.com/singlestore-labs/wasix)
