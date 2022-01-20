@@ -46,6 +46,18 @@ cd /path/to/python-wasi
 ./run.sh
 ```
 
+### Building without Docker
+
+It is possible to build without Docker if you have WASI SDK and the
+other tools required to build CPython already installed. Note, however,
+that currently the `run.sh` script will make changes to a small number
+of files in the WASI SDK tree to fix issues that prevent CPython
+from building. You will want to make a note of these changes in case
+they need to be undone. It is hoped that these issues will be fixed
+in the WASI SDK in the near future so that the patches are no longer
+needed.
+
+
 ### Cloning CPython and/or wasix Manually
 
 The paths to the CPython source and wasix source are configurable in the
