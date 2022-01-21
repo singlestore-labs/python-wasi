@@ -15,11 +15,6 @@ To build the Docker image, use the following command:
 docker build -f docker/Dockerfile -t wasi-build:latest docker
 ```
 
-Note that the `run.sh` script used below does patch a number of files
-in the WASI SDK to alleviate problems in the Python build process.
-If you are not using Docker, you may wish to make a note of the files
-that get changed.
-
 ## Starting a Docker Container
 
 To run the Docker image created above, use the following command:
@@ -49,13 +44,7 @@ cd /path/to/python-wasi
 ### Building without Docker
 
 It is possible to build without Docker if you have WASI SDK and the
-other tools required to build CPython already installed. Note, however,
-that currently the `run.sh` script will make changes to a small number
-of files in the WASI SDK tree to fix issues that prevent CPython
-from building. You will want to make a note of these changes in case
-they need to be undone. It is hoped that these issues will be fixed
-in the WASI SDK in the near future so that the patches are no longer
-needed.
+other tools required to build CPython already installed.
 
 
 ### Cloning CPython and/or wasix Manually
@@ -85,18 +74,20 @@ If your CPython source is not located in the `cpython` directory, the above
 You can run the Python test suite with the following command. Many tests
 are currently failing due to the fact that WASI does not have support
 for threads, subprocesses, or sockets. As support is added for these features
-in the future, more tests will pass.
+in the future, more tests will pass. Note the extra path added to the
+`PYTHONPATH`. This must be included when running tests against a Python
+build that has not been installed yet.
 
 ```
-wasmtime run --env PYTHONHOME=/ --env PYTHONPATH=/Lib --env PATH=/ \
-             --mapdir=/::cpython -- cpython/python.wasm \
+wasmtime run --env PYTHONHOME=/ --env PYTHONPATH=/Lib:/cpython/build/lib.wasi-wasm32-3.X \
+             --env PATH=/ --mapdir=/::cpython -- cpython/python.wasm \
              cpython/Lib/test/test_runpy.py
 ```
 
 ## Resetting Files in the CPython Repository
 
-Several CPython files get patched by the `run.sh` script to fix problems
-in either the build or test process. The `reset-python-repo.sh` script
+A couple CPython files get patched by the `run.sh` script to fix problems
+in the build and testing processes. The `reset-python-repo.sh` script
 can be used to undo the changes made. This allows you to easily change
 to another branch to build alternate versions of Python.
 

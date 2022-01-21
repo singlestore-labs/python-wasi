@@ -53,23 +53,14 @@ export CONFIG_SITE="${PROJECT_DIR}/config.site"
 cd ${PYTHON_DIR}
 
 #!!!
-# WIP: This needs to be fixed in WASI.
-$(cd ${WASI_SDK_PATH}/lib/clang/13.0.0/include && patch -p1 -N -r- < ${PROJECT_DIR}/patches/stddef.h.patch)
-$(cd ${WASI_SDK_PATH}/share/wasi-sysroot/include && patch -p1 -N -r- < ${PROJECT_DIR}/patches/sockaddr_un.h.patch)
-#!!!
-
-#!!!
-# WIP: Fixes for adding wasi to builds, test for missing attributes, and fix 
-#      function signature in _zoneinfo.c.
+# WIP: Fixes for adding wasi to builds and fix function signature in _zoneinfo.c.
 patch -p1 -N -r- < ${PROJECT_DIR}/patches/configure.ac.patch
-patch -p1 -N -r- < ${PROJECT_DIR}/patches/subprocess.py.patch
-patch -p1 -N -r- < ${PROJECT_DIR}/patches/test_posix.py.patch
 patch -p1 -N -r- < ${PROJECT_DIR}/patches/_zoneinfo.c.patch
 #!!!
 
 # Set compiler flags
 export CC="clang --target=wasm32-wasi"
-export CFLAGS="-g -D_WASI_EMULATED_GETPID -D_WASI_EMULATED_SIGNAL -I/opt/include -isystem ${WASIX_DIR}/include"
+export CFLAGS="-g -D_WASI_EMULATED_GETPID -D_WASI_EMULATED_SIGNAL -I/opt/include -I${WASIX_DIR}/include -isystem ${WASIX_DIR}/include"
 export LIBS="-Wl,--stack-first -Wl,-z,stack-size=83886080 -L/opt/lib -L${WASIX_DIR} -lwasix -lwasi-emulated-signal"
 export PATH=${PYTHON_DIR}:${PATH}
 

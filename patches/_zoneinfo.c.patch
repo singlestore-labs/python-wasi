@@ -7,7 +7,7 @@ index d7945d31af..3e68556fcc 100644
  static PyMethodDef module_methods[] = {{NULL, NULL}};
  static void
 -module_free()
-+module_free(PyObject *m)
++module_free(void *m)
  {
      Py_XDECREF(_tzpath_find_tzfile);
      _tzpath_find_tzfile = NULL;

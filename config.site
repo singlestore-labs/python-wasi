@@ -4,6 +4,9 @@ ac_cv_func_dlopen=no
 ac_cv_header_sys_resource_h=no
 ac_cv_func_clock=yes
 ac_cv_header_sys_eventfd_h=no
+ac_cv_func_mkfifo=yes
+ac_cv_func_mknod=yes
+ac_cv_func_mknodat=yes
 
 # cannot be detected for cross builds
 ac_cv_buggy_getaddrinfo=no
