@@ -20,7 +20,7 @@ docker build -f docker/Dockerfile -t wasi-build:latest docker
 To run the Docker image created above, use the following command:
 
 ```
-docker run -it --rm -v /home/me:/home/me wasi-build:latest bash
+docker run -it --rm -v $(pwd):$(pwd) -w $(pwd) wasi-build:latest bash
 ```
 
 The mount for your user directory should be changed accordingly.
@@ -37,7 +37,6 @@ files in the WASI SDK and CPython source, then build CPython
 for the WASI platform.
 
 ```
-cd /path/to/python-wasi
 ./run.sh
 ```
 
@@ -86,9 +85,9 @@ wasmtime run --env PYTHONHOME=/ --env PYTHONPATH=/Lib:/cpython/build/lib.wasi-wa
 
 ## Resetting Files in the CPython Repository
 
-A couple CPython files get patched by the `run.sh` script to fix problems
-in the build and testing processes. The `reset-python-repo.sh` script
-can be used to undo the changes made. This allows you to easily change
+A couple files from the CPython repo get patched by the `run.sh` script to
+fix problems in the build and testing processes. The `reset-python-repo.sh`
+script can be used to undo the changes made. This allows you to easily change
 to another branch to build alternate versions of Python.
 
 # ToDo
