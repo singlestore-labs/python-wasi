@@ -1,5 +1,8 @@
 #!/bin/bash
 
-cd cpython && git checkout Modules/_zoneinfo.c \
-                           configure \
-                           configure.ac
+cd cpython
+git checkout config.sub
+git checkout config.guess
+git checkout configure
+git checkout configure.ac
+git checkout Modules/_zoneinfo.c

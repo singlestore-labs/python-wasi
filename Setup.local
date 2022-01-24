@@ -13,7 +13,7 @@ _contextvars _contextvarsmodule.c
 _struct _struct.c      # binary structure packing/unpacking
 _weakref _weakref.c    # basic weak reference support
 #_testcapi _testcapimodule.c    # Python C API test module
-#_testinternalcapi _testinternalcapi.c -I$(srcdir)/Include/internal -DPy_BUILD_CORE_MODULE  # Python internal C API test module
+_testinternalcapi _testinternalcapi.c -I$(srcdir)/Include/internal -DPy_BUILD_CORE_MODULE  # Python internal C API test module
 _random _randommodule.c        # Random number generator
 _elementtree -I$(srcdir)/Modules/expat -DHAVE_EXPAT_CONFIG_H -DUSE_PYEXPAT_CAPI _elementtree.c # elementtree accelerator
 _pickle _pickle.c      # pickle accelerator
@@ -38,7 +38,7 @@ select selectmodule.c  # select(2); not on ancient System V
  
 _csv _csv.c
 
-#_socket socketmodule.c
+_socket socketmodule.c
 
 #SSL=/usr/local/ssl
 #_ssl _ssl.c \
@@ -70,7 +70,8 @@ _blake2 _blake2/blake2module.c _blake2/blake2b_impl.c _blake2/blake2s_impl.c
 # correctly viewed as a definition line. We need extra quotes to make gcc think
 # we want to define MODULE_NAME to be the string "sqlite" instead of the
 # abstract symbol sqlite.
-_sqlite3 _sqlite/cache.c _sqlite/connection.c _sqlite/cursor.c _sqlite/microprotocols.c _sqlite/module.c _sqlite/prepare_protocol.c _sqlite/row.c _sqlite/statement.c _sqlite/util.c -lsqlite3 -DSQLITE_OMIT_LOAD_EXTENSION
+_sqlite3 _sqlite/cache.c _sqlite/connection.c _sqlite/cursor.c _sqlite/microprotocols.c _sqlite/module.c _sqlite/prepare_protocol.c _sqlite/row.c _sqlite/statement.c _sqlite/util.c -lsqlite3 -DSQLITE_OMIT_LOAD_EXTENSION -D$(SQLITEMODULENAME)
+SQLITEMODULENAME=MODULE_NAME=\'"sqlite"\'
 
 #syslog syslogmodule.c          # syslog daemon interface
 
