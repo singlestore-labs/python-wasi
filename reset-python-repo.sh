@@ -6,3 +6,4 @@ git checkout config.guess
 git checkout configure
 git checkout configure.ac
 git checkout Modules/_zoneinfo.c
+git checkout Modules/getpath.py

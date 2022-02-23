@@ -1,0 +1,45 @@
+diff --git a/Modules/getpath.py b/Modules/getpath.py
+index f84e6e8afa..2de0312c01 100644
+--- a/Modules/getpath.py
++++ b/Modules/getpath.py
+@@ -281,11 +281,12 @@ def search_up(prefix, *landmarks, test=isfile):
+     # Resolve names against PATH.
+     # NOTE: The use_environment value is ignored for this lookup.
+     # To properly isolate, launch Python with a full path.
+-    for p in ENV_PATH.split(DELIM):
+-        p = joinpath(p, program_name)
+-        if isxfile(p):
+-            executable = p
+-            break
++    if ENV_PATH:
++        for p in ENV_PATH.split(DELIM):
++            p = joinpath(p, program_name)
++            if isxfile(p):
++                executable = p
++                break
+
+ if not executable:
+     executable = ''
+@@ -339,11 +340,11 @@ def search_up(prefix, *landmarks, test=isfile):
+         try:
+             # Read pyvenv.cfg from one level above executable
+             pyvenvcfg = readlines(joinpath(venv_prefix, VENV_LANDMARK))
+-        except FileNotFoundError:
++        except (FileNotFoundError, OSError):
+             # Try the same directory as executable
+             pyvenvcfg = readlines(joinpath(venv_prefix2, VENV_LANDMARK))
+             venv_prefix = venv_prefix2
+-    except FileNotFoundError:
++    except (FileNotFoundError, OSError):
+         venv_prefix = None
+         pyvenvcfg = []
+
+@@ -462,7 +463,7 @@ def search_up(prefix, *landmarks, test=isfile):
+         # File exists but is empty
+         platstdlib_dir = real_executable_dir
+         build_prefix = joinpath(real_executable_dir, VPATH)
+-    except FileNotFoundError:
++    except (FileNotFoundError, OSError):
+         if isfile(joinpath(real_executable_dir, BUILD_LANDMARK)):
+             build_prefix = joinpath(real_executable_dir, VPATH)
+             if os_name == 'nt':
