@@ -61,26 +61,29 @@ interpreter that was just built. To run an interactive session of the
 newly built CPython interpreter, use the following command:
 
 ```
-wasmtime run --env PYTHONHOME=/ --env PYTHONPATH=/Lib --env PATH=/ \
-             --mapdir=/::cpython -- cpython/python.wasm -i
+wasmtime run --mapdir=/opt::/opt \
+             --env PATH=/opt/wasi-python/bin \
+             -- /opt/wasi-python/bin/python3.wasm -i
 ```
 
-If your CPython source is not located in the `cpython` directory, the above
-`--mapdir=` option should reflect the appropriate location.
+It is possible to relocate the WASI Python installation by putting it in
+the desired directory and setting `PYTHONHOME` to that path. By default,
+`PYTHONHOME` is set to `/opt/wasi-python`.
 
 ## Running Python Unit Tests
 
 You can run the Python test suite with the following command. Many tests
 are currently failing due to the fact that WASI does not have support
 for threads, subprocesses, or sockets. As support is added for these features
-in the future, more tests will pass. Note the extra path added to the
-`PYTHONPATH`. This must be included when running tests against a Python
-build that has not been installed yet.
+in the future, more tests will pass. Note that you must put the correct
+Python version number in the test file path.
 
 ```
-wasmtime run --env PYTHONHOME=/ --env PYTHONPATH=/Lib:/cpython/build/lib.wasi-wasm32-3.X \
-             --env PATH=/ --mapdir=/::cpython -- cpython/python.wasm \
-             cpython/Lib/test/test_runpy.py
+wasmtime run --mapdir=/opt::/opt \
+             --mapdir=/tmp::/tmp \
+             --env PATH=/opt/wasi-python/bin \
+             -- /opt/wasi-python/bin/python3.wasm \
+             /opt/wasi-python/lib/python3.X/test/test_runpy.py
 ```
 
 ## Resetting Files in the CPython Repository
