@@ -43,7 +43,9 @@ for the WASI platform.
 ### Building without Docker
 
 It is possible to build without Docker if you have WASI SDK and the
-other tools required to build CPython already installed.
+other tools required to build CPython already installed. Note that the
+`run.sh` script does install the resulting Python build in
+`/opt/wasi-python`.
 
 
 ### Cloning CPython and/or wasix Manually
