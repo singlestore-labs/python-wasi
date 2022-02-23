@@ -86,18 +86,27 @@ cp ${WASI_SDK_PATH}/share/misc/config.sub . && \
                --with-build-python=${PYTHON_DIR}/inst/${PYTHON_VER}/bin/python${PYTHON_VER} \
                --disable-ipv6 --enable-big-digits=30 --with-suffix=.wasm \
                --with-freeze-module=./build/Programs/_freeze_module \
-	       --prefix=/ --exec-prefix=/ && \
+	       --prefix=/opt/wasi-python && \
    make clean && \
    rm -f python.wasm && \
-   make -j
+   make -j && \
+   make install
 
 rm -f "${PYTHON_DIR}/Modules/Setup.local"
 
 cd ${PROJECT_DIR}
 
+# Package wasi-python and wasix libraries
+tar zcvf ${PROJECT_DIR}/wasi-python.tgz /opt/wasi-python
+mkdir -p /opt/wasix/lib && \
+    cp -R ${WASIX_DIR}/include /opt/wasix/. && \
+    cp ${WASIX_DIR}/libwasix.a /opt/wasix/lib/. && \
+    tar zcvf ${PROJECT_DIR}/wasix.tgz /opt/wasix
+
 # This is needed when running unit tests.
 mkdir -p tmp
 
 # Reality check it
-wasmtime run --mapdir=/::cpython --env PYTHONHOME=/ --env PYTHONPATH=/Lib --env PATH=/ \
-	     -- cpython/python.wasm -V
+wasmtime run --mapdir=/opt/wasi-python::/opt/wasi-python \
+	     --env PATH=/opt/wasi-python/bin \
+	     -- /opt/wasi-python/bin/python${PYTHON_VER}.wasm -V
