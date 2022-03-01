@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y \
     vim \
     build-essential \
     libc6-dev \
-    libc6-dev-i386 \
     libtinfo5 \
+    libxkbcommon-dev \
     m4 \
     zip \
     git \

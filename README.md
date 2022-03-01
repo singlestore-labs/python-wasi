@@ -43,10 +43,7 @@ for the WASI platform.
 ### Building without Docker
 
 It is possible to build without Docker if you have WASI SDK and the
-other tools required to build CPython already installed. Note that the
-`run.sh` script does install the resulting Python build in
-`/opt/wasi-python`.
-
+other tools required to build CPython already installed.
 
 ### Cloning CPython and/or wasix Manually
 
@@ -63,14 +60,13 @@ interpreter that was just built. To run an interactive session of the
 newly built CPython interpreter, use the following command:
 
 ```
-wasmtime run --mapdir=/opt::/opt \
-             --env PATH=/opt/wasi-python/bin \
-             -- /opt/wasi-python/bin/python3.wasm -i
+wasmtime run --mapdir=$(pwd)/opt::opt \
+             -- opt/wasi-python/bin/python3.wasm -i
 ```
 
 It is possible to relocate the WASI Python installation by putting it in
 the desired directory and setting `PYTHONHOME` to that path. By default,
-`PYTHONHOME` is set to `/opt/wasi-python`.
+`PYTHONHOME` is set to `$(pwd)/opt/wasi-python`.
 
 ## Running Python Unit Tests
 
@@ -81,10 +77,9 @@ in the future, more tests will pass. Note that you must put the correct
 Python version number in the test file path.
 
 ```
-wasmtime run --mapdir=/opt::/opt \
+wasmtime run --mapdir=$(pwd)/opt::opt \
              --mapdir=/tmp::/tmp \
-             --env PATH=/opt/wasi-python/bin \
-             -- /opt/wasi-python/bin/python3.wasm \
+             -- opt/wasi-python/bin/python3.wasm \
              /opt/wasi-python/lib/python3.X/test/test_runpy.py
 ```
 
