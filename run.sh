@@ -2,7 +2,7 @@
 
 #set -x
 
-WASI_SDK_PATH=/opt/wasi-sdk
+WASI_SDK_PATH="${WASI_SDK_PATH:-/opt/wasi-sdk}"
 PYTHON_DIR=cpython
 WASIX_DIR=wasix
 PROJECT_DIR=$(pwd)
@@ -94,6 +94,7 @@ cp ${WASI_SDK_PATH}/share/misc/config.sub . && \
    autoconf -f && \
    ./configure --host=wasm32-wasi --build=x86_64-pc-linux-gnu \
                --with-build-python=${PYTHON_DIR}/inst/${PYTHON_VER}/bin/python${PYTHON_VER} \
+               --with-ensurepip=no \
                --disable-ipv6 --enable-big-digits=30 --with-suffix=.wasm \
                --with-freeze-module=./build/Programs/_freeze_module \
 	       --prefix=${INSTALL_PREFIX}/wasi-python && \
