@@ -59,6 +59,8 @@ if [[ ("$PYTHON_MAJOR" -ge "3") && ("$PYTHON_MINOR" -ge "11") ]]; then
     rm -f "${PYTHON_DIR}/Modules/Setup.local"
     patch -p1 -N -r- < ${PROJECT_DIR}/patches/getpath.py.patch
 else
+    export LIBS="-Wl,--stack-first -Wl,-z,stack-size=83886080"
+
     cp "${PROJECT_DIR}/Setup.local" "${PYTHON_DIR}/Modules/Setup.local"
 
     # Apply patches
@@ -78,12 +80,12 @@ fi
 export CC="clang --target=wasm32-wasi"
 export CFLAGS="-g -D_WASI_EMULATED_GETPID -D_WASI_EMULATED_SIGNAL -D_WASI_EMULATED_PROCESS_CLOCKS -I/opt/include -I${WASIX_DIR}/include -isystem ${WASIX_DIR}/include -I${WASI_SDK_PATH}/share/wasi-sysroot/include -I${PROJECT_DIR}/docker/include --sysroot=${WASI_SDK_PATH}/share/wasi-sysroot"
 export CPPFLAGS="${CFLAGS}"
-export LIBS="-Wl,--stack-first -Wl,-z,stack-size=83886080 -L/opt/lib -L${WASIX_DIR} -lwasix -L${WASI_SDK_PATH}/share/wasi-sysroot/lib/wasm32-wasi -lwasi-emulated-signal -L${PROJECT_DIR}/docker/lib --sysroot=${WASI_SDK_PATH}/share/wasi-sysroot"
+export LIBS="${LIBS} -L/opt/lib -L${WASIX_DIR} -lwasix -L${WASI_SDK_PATH}/share/wasi-sysroot/lib/wasm32-wasi -lwasi-emulated-signal -L${PROJECT_DIR}/docker/lib --sysroot=${WASI_SDK_PATH}/share/wasi-sysroot"
 export PATH=${PYTHON_DIR}/inst/${PYTHON_VER}/bin:${PROJECT_DIR}/build/bin:${PATH}
 
 # Override ld. This is called to build _ctype_test as a "shared module" which isn't supported.
 mkdir -p "${PROJECT_DIR}/build/bin"
-echo "wasm-ld --stack-first -z,stack-size=83886080 -L/opt/lib -L${WASIX_DIR} -lwasix -L${WASI_SDK_PATH}/share/wasi-sysroot/lib/wasm32-wasi -lwasi-emulated-signal --no-entry \$*" > "${PROJECT_DIR}/build/bin/ld"
+echo "wasm-ld ${LIBS} --no-entry \$*" > "${PROJECT_DIR}/build/bin/ld"
 chmod +x "${PROJECT_DIR}/build/bin/ld"
 echo "$(echo "$(which clang)" | xargs dirname)/readelf" > "${PROJECT_DIR}/build/bin/wasm32-wasi-readelf"
 chmod +x "${PROJECT_DIR}/build/bin/wasm32-wasi-readelf"
