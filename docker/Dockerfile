@@ -19,14 +19,14 @@ RUN apt-get update && apt-get install -y \
 
 # WASI SDK
 RUN cd /opt && \
-    wget https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-14/wasi-sdk-14.0-linux.tar.gz && \
+    wget https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-16/wasi-sdk-16.0-linux.tar.gz && \
     tar zxvf *.tar.gz && \
     rm *.tar.gz && \
-    ln -s /opt/wasi-sdk-14.0 /opt/wasi-sdk
+    ln -s /opt/wasi-sdk-16.0 /opt/wasi-sdk
 
 # Python checks for this, but doesn't seem to use it.
-RUN touch /opt/wasi-sdk-14.0/bin/wasm32-wasi-readelf && \
-    chmod +x /opt/wasi-sdk-14.0/bin/wasm32-wasi-readelf
+RUN touch /opt/wasi-sdk-16.0/bin/wasm32-wasi-readelf && \
+    chmod +x /opt/wasi-sdk-16.0/bin/wasm32-wasi-readelf
 
 # Autoconf
 RUN cd /tmp && \
