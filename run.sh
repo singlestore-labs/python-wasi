@@ -20,6 +20,11 @@ if [[ ! -d "${WASIX_DIR}" ]]; then
     cd "${PROJECT_DIR}"
 fi
 
+if [[ ! -e "${WASIX_DIR}/libwasix.a" ]]; then
+    echo "ERROR: wasix library is not at ${WASIX_DIR}/libwasix.a"
+    exit 1
+fi
+
 if [[ ! -d "${WASI_SDK_PATH}" ]]; then
     echo "ERROR: Could not find WASI SDK: ${WASI_SDK_PATH}"
     exit 1 
@@ -29,6 +34,11 @@ fi
 WASI_SDK_PATH=$(cd "${WASI_SDK_PATH}"; pwd)
 PYTHON_DIR=$(cd "${PYTHON_DIR}"; pwd)
 WASIX_DIR=$(cd "${WASIX_DIR}"; pwd)
+
+# Check out Python version if requested
+if [[ -n "${PYTHON_VER}" ]]; then
+    $(cd "${PYTHON_DIR}" && git checkout "${PYTHON_VER}")
+fi
 
 # Determine Python version.
 PYTHON_VER=$(grep '^VERSION=' "${PYTHON_DIR}/configure" | cut -d= -f2)
@@ -58,6 +68,7 @@ export CONFIG_SITE="${PROJECT_DIR}/config.site"
 if [[ ("$PYTHON_MAJOR" -ge "3") && ("$PYTHON_MINOR" -ge "11") ]]; then
     rm -f "${PYTHON_DIR}/Modules/Setup.local"
     patch -p1 -N -r- < ${PROJECT_DIR}/patches/getpath.py.patch
+    patch -p1 -N -r- < ${PROJECT_DIR}/patches/Makefile.pre.in.patch
 else
     export LIBS="-Wl,--stack-first -Wl,-z,stack-size=83886080"
 

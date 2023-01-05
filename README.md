@@ -4,7 +4,7 @@ This project consists of utilities and libraries for building
 CPython sources for the [WebAssembly](https://webassembly.org)
 platform using the [WASI SDK](https://github.com/WebAssembly/wasi-sdk) (v15+).
 The scripts here will configure and build various versions of CPython
-(3.8, 3.9, 3.10, 3.11). A Dockerfile is supplied to simplify the setup
+(3.8, 3.9, 3.10, 3.11, 3.12). A Dockerfile is supplied to simplify the setup
 of a build environment.
 
 ## Building the Docker Image
