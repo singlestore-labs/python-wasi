@@ -138,10 +138,12 @@ modules.
 
 # Resources
 
-[Python](https://python.org) The Python programming language
+[Python](https://python.org) Python programming language
 
-[CPython](https://github.com/python/cpython) The CPython source repository
+[CPython](https://github.com/python/cpython) CPython source repository
 
-[WASI SDK](https://github.com/WebAssembly/wasi-sdk) The WASI SDK source repository
+[WASI SDK](https://github.com/WebAssembly/wasi-sdk) WASI SDK source repository
 
-[wasix](https://github.com/singlestore-labs/wasix) The wasix library source repository
+[wasix](https://github.com/singlestore-labs/wasix) wasix library source repository
+
+[WASI VFS](https://github.com/kateinoigakukun/wasi-vfs) Virtual file system
