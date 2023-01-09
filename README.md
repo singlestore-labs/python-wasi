@@ -56,17 +56,50 @@ the build.
 
 The `run.sh` script will execute a smoke test of the resulting CPython
 build using `wasmtime` which prints the version number of the CPython
-interpreter that was just built. To run an interactive session of the
-newly built CPython interpreter, use the following command:
+interpreter that was just built. How the resulting build is executed
+depends on some options.
 
+### Default
+
+The default behavior is to build WASI Python, compile all of the `.py`
+files in the standard libray, then pack the standard library into the
+WASM file using WASI VFS. This gives you a complete runnable Python
+installation in one file, but it is also quite large (~150MB). To run
+the file, you simply do:
 ```
-wasmtime run --mapdir=$(pwd)/opt::opt \
-             -- opt/wasi-python/bin/python3.wasm -i
+wasmtime run -- wasi-python3.10.wasm
+```
+
+### Build without compiling standard library
+
+You can still create a single binary that includes the entire installation
+without compiling the standard library which cuts the resulting file
+in roughly half. However, Python will not be able to compile the `.py`
+files on-the-fly since the WASM file is read-only. To disable the compilation
+of `.py` files, use the `-B` option or `PYTHONDONTWRITEBYTECODE=1`
+environment variable.
+
+To build in this manner, you set `COMPILE_STDLIB=0` when executing `run.sh`.
+Running WASI Python is done as follows:
+```
+wasmtime run -- wasi-python3.10.wasm -B
+```
+
+### Build without packing standard library
+
+The final method of running WASI Python is without including the standard
+library in the WASM file. This method requires you to map a local directory
+that contains those files. To build in this manner, you set
+`INCLUDE_STDLIB=0` when executing `run.sh`. Running WASI Python in this
+method is done as follows:
+```
+wasmtime run --mapdir=/opt/wasi-python/lib/python3.10::/opt/wasi-python/lib/python3.10 \
+             -- wasi-python3.10.wasm
 ```
 
 It is possible to relocate the WASI Python installation by putting it in
 the desired directory and setting `PYTHONHOME` to that path. By default,
-`PYTHONHOME` is set to `$(pwd)/opt/wasi-python`.
+`PYTHONHOME` is set to `/opt/wasi-python`.
 
 ## Running Python Unit Tests
 
@@ -77,10 +110,10 @@ in the future, more tests will pass. Note that you must put the correct
 Python version number in the test file path.
 
 ```
-wasmtime run --mapdir=$(pwd)/opt::opt \
+wasmtime run --mapdir=/opt/wasi-python/lib/python3.10::/opt/wasi-python/lib/python3.10 \
              --mapdir=/tmp::/tmp \
-             -- opt/wasi-python/bin/python3.wasm \
-             /opt/wasi-python/lib/python3.X/test/test_runpy.py
+             -- wasi-python3.10.wasm \
+             /opt/wasi-python/lib/python3.10/test/test_runpy.py
 ```
 
 ## Resetting Files in the CPython Repository

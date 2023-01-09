@@ -50,9 +50,20 @@ RUN cd /opt && \
     git submodule update --init
 RUN cd /opt/wabt && mkdir build && cd build && cmake .. && cmake --build .
 
-# Files for 3rd party Python modules.
 RUN mkdir /opt/lib
 RUN mkdir /opt/include
+
+# WASI VFS
+RUN cd /tmp && \
+    wget https://github.com/kateinoigakukun/wasi-vfs/releases/download/v0.2.0/wasi-vfs-cli-x86_64-unknown-linux-gnu.zip && \
+    unzip wasi-vfs-cli-x86_64-unknown-linux-gnu.zip && \
+    mv wasi-vfs /usr/local/bin/wasi-vfs
+RUN cd /tmp && \
+    wget https://github.com/kateinoigakukun/wasi-vfs/releases/download/v0.2.0/libwasi_vfs-wasm32-unknown-unknown.zip && \
+    unzip libwasi_vfs-wasm32-unknown-unknown.zip && \
+    mv libwasi_vfs.a /opt/lib/libwasi_vfs.a
+
+# Files for 3rd party Python modules.
 COPY lib/* /opt/lib/
 COPY include/* /opt/include/
 RUN mkdir -p /opt/include/lzma
