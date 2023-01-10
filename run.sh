@@ -123,7 +123,7 @@ chmod +x "${PROJECT_DIR}/build/bin/wasm32-wasi-readelf"
 
 # Configure and build
 cp "${WASI_SDK_PATH}/share/misc/config.sub" . && \
-   "cp ${WASI_SDK_PATH}/share/misc/config.guess" . && \
+   cp "${WASI_SDK_PATH}/share/misc/config.guess" . && \
    autoconf -f && \
    ./configure --host=wasm32-wasi --build=x86_64-pc-linux-gnu \
                --with-build-python="${BUILD_PYTHON_DIR}/bin/python${PYTHON_VER}" \
@@ -146,6 +146,7 @@ if [[ -f "${INSTALL_PREFIX}/wasi-python/bin/python${PYTHON_VER}.wasm" ]]; then
       if [[ -z "$COMPILE_STDLIB" || "$COMPILE_STDLIB" -eq "1" ]]; then
          echo "COMPILING STDLIB"
          "${BUILD_PYTHON_DIR}/bin/python3" -m compileall "${INSTALL_PREFIX}/wasi-python/lib/python${PYTHON_VER}"
+         "${BUILD_PYTHON_DIR}/bin/python3" "${PROJECT_DIR}/clear-uncompiled-pys.py" "${INSTALL_PREFIX}/wasi-python/lib/python${PYTHON_VER}"
       fi
       wasi-vfs pack "${INSTALL_PREFIX}/wasi-python/bin/python${PYTHON_VER}.wasm" --mapdir "${INSTALL_PREFIX}/wasi-python/lib/python${PYTHON_VER}::${INSTALL_PREFIX}/wasi-python/lib/python${PYTHON_VER}" --output "wasi-python${PYTHON_VER}.wasm"
    else
