@@ -23,25 +23,13 @@
 
 WASI_SDK_PATH="${WASI_SDK_PATH:-/opt/wasi-sdk}"
 PYTHON_DIR=cpython
-WASIX_DIR=wasix
+WASI_ROOT=/opt
 PROJECT_DIR=$(pwd)
 INSTALL_PREFIX=/opt
 
 if [[ ! -d "${PYTHON_DIR}" ]]; then
     git clone https://github.com/python/cpython.git
     PYTHON_DIR=cpython
-fi
-
-if [[ ! -d "${WASIX_DIR}" ]]; then
-    git clone https://github.com/singlestore-labs/wasix
-    WASIX_DIR=wasix
-    cd "${WASIX_DIR}" && make
-    cd "${PROJECT_DIR}"
-fi
-
-if [[ ! -e "${WASIX_DIR}/libwasix.a" ]]; then
-    echo "ERROR: wasix library is not at ${WASIX_DIR}/libwasix.a"
-    exit 1
 fi
 
 if [[ ! -d "${WASI_SDK_PATH}" ]]; then
@@ -52,7 +40,7 @@ fi
 # Get absolute paths of all components.
 WASI_SDK_PATH=$(cd "${WASI_SDK_PATH}"; pwd)
 PYTHON_DIR=$(cd "${PYTHON_DIR}"; pwd)
-WASIX_DIR=$(cd "${WASIX_DIR}"; pwd)
+WASI_ROOT=$(cd "${WASI_ROOT}"; pwd)
 
 # Check out Python version if requested
 if [[ -n "${PYTHON_VER}" ]]; then
@@ -109,9 +97,9 @@ fi
 
 # Set compiler flags
 export CC="clang --target=wasm32-wasi"
-export CFLAGS="-g -D_WASI_EMULATED_GETPID -D_WASI_EMULATED_SIGNAL -D_WASI_EMULATED_PROCESS_CLOCKS -I/opt/include -I${WASIX_DIR}/include -isystem ${WASIX_DIR}/include -I${WASI_SDK_PATH}/share/wasi-sysroot/include -I${PROJECT_DIR}/docker/include --sysroot=${WASI_SDK_PATH}/share/wasi-sysroot"
+export CFLAGS="-g -D_WASI_EMULATED_GETPID -D_WASI_EMULATED_SIGNAL -D_WASI_EMULATED_PROCESS_CLOCKS -I/opt/include -I${WASI_ROOT}/include -isystem ${WASI_ROOT}/include -I${WASI_SDK_PATH}/share/wasi-sysroot/include -I${PROJECT_DIR}/docker/include --sysroot=${WASI_SDK_PATH}/share/wasi-sysroot"
 export CPPFLAGS="${CFLAGS}"
-export LIBS="${LIBS} -L/opt/lib -L${WASIX_DIR} -lwasix -lwasi_vfs -L${WASI_SDK_PATH}/share/wasi-sysroot/lib/wasm32-wasi -lwasi-emulated-signal -L${PROJECT_DIR}/docker/lib --sysroot=${WASI_SDK_PATH}/share/wasi-sysroot"
+export LIBS="${LIBS} -L/opt/lib -L${WASI_ROOT}/lib -lwasix -lwasi_vfs -L${WASI_SDK_PATH}/share/wasi-sysroot/lib/wasm32-wasi -lwasi-emulated-signal -L${PROJECT_DIR}/docker/lib --sysroot=${WASI_SDK_PATH}/share/wasi-sysroot"
 export PATH=${BUILD_PYTHON_DIR}/bin:${PROJECT_DIR}/build/bin:${PATH}
 
 # Override ld. This is called to build _ctype_test as a "shared module" which isn't supported.

@@ -72,3 +72,12 @@ COPY include/lzma/* /opt/include/lzma/
 ENV PATH=/opt/wasi-sdk/bin:/root/.wasmer/bin:/opt/wabt/build:${PATH}
 ENV WASMTIME_BACKTRACE_DETAILS=1
 ENV WASI_SDK_PATH=/opt/wasi-sdk
+
+# WASIX
+RUN cd /tmp && \
+    wget -O wasix.zip https://github.com/singlestore-labs/wasix/archive/refs/tags/v0.2.0.zip && \
+    unzip wasix.zip && \
+    cd wasix-0.2.0 && \
+    make clean && \
+    make && \
+    make install    

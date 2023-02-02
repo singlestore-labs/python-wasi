@@ -31,8 +31,7 @@ writable directory that has access to the files from this project.
 
 In the Docker container created in the previous step, run the
 following command from this project directory. It will download the
-CPython repository as well as the source for the
-[wasix](https://github.com/singlestore-labs/wasix) project, patch
+CPython repository, patch
 files in the CPython source (as needed per version), then build CPython
 for the WASI platform.
 
@@ -45,9 +44,9 @@ for the WASI platform.
 It is possible to build without Docker if you have WASI SDK and the
 other tools required to build CPython already installed.
 
-### Cloning CPython and/or wasix Manually
+### Cloning CPython Manually
 
-The paths to the CPython source and wasix source are configurable in the
+The paths to the CPython source is configurable in the
 `run.sh` script. You can clone them manually before running `run.sh`.
 This method can be used to change the source branch used prior to running
 the build.
