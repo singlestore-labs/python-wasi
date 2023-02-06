@@ -15,7 +15,9 @@ RUN apt-get update && apt-get install -y \
     zip \
     git \
     cmake \
-    ninja-build
+    ninja-build \
+    zlib1g-dev \
+    libssl-dev
 
 # WASI SDK
 RUN cd /opt && \

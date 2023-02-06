@@ -1,0 +1,2 @@
+call: func(name: string, args: list<u8>) -> list<u8>
+exec: func(code: string) -> s32

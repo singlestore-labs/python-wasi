@@ -61,7 +61,7 @@ if [[ ! -d "${BUILD_PYTHON_DIR}" ]]; then
     cd "${PYTHON_DIR}"
     rm -f Modules/Setup.local
     ./configure --disable-test-modules \
-	        --with-ensurepip=no \
+	        --with-ensurepip=yes \
 	        --prefix="${BUILD_PYTHON_DIR}" \
 	        --exec-prefix="${BUILD_PYTHON_DIR}" && \
         make clean && \
