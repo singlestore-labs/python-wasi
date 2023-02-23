@@ -78,7 +78,7 @@ if [[ ("$PYTHON_MAJOR" -ge "3") && ("$PYTHON_MINOR" -ge "11") ]]; then
     rm -f "${PYTHON_DIR}/Modules/Setup.local"
     patch -p1 -N -r- < "${PROJECT_DIR}/patches/getpath.py.patch"
 else
-    export LIBS="-Wl,--stack-first -Wl,-z,stack-size=83886080"
+    export LIBS="-z stack-size=524288 -Wl,--stack-first -Wl,--initial-memory=10485760"
 
     cp "${PROJECT_DIR}/Setup.local" "${PYTHON_DIR}/Modules/Setup.local"
 
