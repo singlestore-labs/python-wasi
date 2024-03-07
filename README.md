@@ -1,5 +1,7 @@
 # CPython on wasm32-wasi
 
+**Attention**: The code in this repository is intended for experimental use only and is not fully tested, documented, or supported by SingleStore. Visit the [SingleStore Forums](https://www.singlestore.com/forum/) to ask questions about this repository.
+
 This project consists of utilities and libraries for building 
 CPython sources for the [WebAssembly](https://webassembly.org)
 platform using the [WASI SDK](https://github.com/WebAssembly/wasi-sdk) (v15+).
